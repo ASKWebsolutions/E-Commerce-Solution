@@ -3,6 +3,21 @@ import React,{useState, useEffect} from 'react'
 const Products = () => {
 const [products, setProducts] = useState([]);
 
+const addToCart= async(productId) =>{
+  const token = localstorage.getItem("token");
+
+  await fetch("http://localhost:5000/cart/add", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify({productId})
+  });
+
+  alert("Added to Cart")
+}
+
 useEffect(()=>{
 fetch("http://localhost:5000/products")
 .then(res => res.json())
@@ -20,6 +35,9 @@ fetch("http://localhost:5000/products")
             <h3>{product.name}</h3>
             <p>{product.description}</p>
             <strong>${product.price}</strong>
+            <button onClick={()=> addToCart(product._id)}>
+              Add to Cart
+            </button>
         </div>
       ))}
     </div>
